@@ -1,0 +1,30 @@
+name: frontveg
+display_name: Frontveg
+# use 'hidden' to remove plugin from napari hub search results
+visibility: public
+# see https://napari.org/stable/plugins/technical_references/manifest.html#fields for valid categories
+categories: ["Annotation", "Segmentation", "Acquisition"]
+contributions:
+  commands:
+    - id: frontveg.make_container_widget
+      python_name: frontveg:ImageThreshold
+      title: Make threshold Container widget
+    - id: frontveg.make_magic_widget
+      python_name: frontveg:threshold_magic_widget
+      title: Make threshold magic widget
+    - id: frontveg.make_function_widget
+      python_name: frontveg:threshold_autogenerate_widget
+      title: Make threshold function widget
+    - id: frontveg.make_qwidget
+      python_name: frontveg:ExampleQWidget
+      title: Make example QWidget
+  widgets:
+    - command: frontveg.make_container_widget
+      display_name: Container Threshold
+    - command: frontveg.make_magic_widget
+      display_name: Magic Threshold
+    - command: frontveg.make_function_widget
+      autogenerate: true
+      display_name: Autogenerate Threshold
+    - command: frontveg.make_qwidget
+      display_name: Example QWidget
