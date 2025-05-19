@@ -9,7 +9,11 @@
 [![npe2](https://img.shields.io/badge/plugin-npe2-blue?link=https://napari.org/stable/plugins/index.html)](https://napari.org/stable/plugins/index.html)
 [![Copier](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/copier-org/copier/master/img/badge/badge-grayscale-inverted-border-purple.json)](https://github.com/copier-org/copier)
 
-Segmentation of vegetation located to close to camera
+A plugin for foreground vegetation segmentation, tailored for trellised vegetation row images. It uses RGB images to perform inference and allows users to manually refine the generated mask.
+
+----------------------------------
+
+The method was developped by Herearii Metuarea, PHENET PhD at LARIS (French laboratory located in Angers, France) and Abdoul-Djalil Hamza Ousseini, AgroEcoPhen Engineer at IRHS (French Institute located in INRAe Angers, France) in Imhorphen team (bioimaging research group lead) under the supervision of Eric Duchêne (Research Engineer), Morgane Roth (Research Engineer) and David Rousseau (Full professor). This plugin was written by Herearii Metuarea and was designed in the context of the european project PHENET.
 
 ----------------------------------
 
@@ -35,6 +39,19 @@ To install latest development version :
 
     pip install git+https://github.com/hereariim/frontveg.git
 
+## Description
+
+This plugin is a tool to perform image inference. This plugin contained two steps of image processing. First, from RGB image, an depth map is estimated and then thresholded to detect foreground and background in image. Second, grounding dino model detect foliage in foreground. The output is a binary mask where white colour are associated to foliage in foreground.
+
+## Contact
+
+Imhorphen team, bioimaging research group
+
+42 rue George Morel, Angers, France
+
+- Pr David Rousseau, david.rousseau@univ-angers.fr
+- Abdoul-djalil ousseini-hamza, abdoul-djalil.ousseini-hamza@inrae.fr
+- Herearii Metuarea, herearii.metuarea@univ-angers.fr
 
 ## Contributing
 
