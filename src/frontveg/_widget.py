@@ -31,99 +31,116 @@ Replace code below according to your needs.
 
 from typing import TYPE_CHECKING
 
+import numpy as np
+import torch
 from magicgui import magic_factory
-from magicgui.widgets import CheckBox, Container, create_widget
-from qtpy.QtWidgets import QHBoxLayout, QPushButton, QWidget
-from skimage.util import img_as_float
+from PIL import Image
+from scipy import ndimage
+from transformers import pipeline
 
 if TYPE_CHECKING:
     import napari
+from frontveg.utils import frontground_part, ground_dino, sam2
 
-
-# Uses the `autogenerate: true` flag in the plugin manifest
-# to indicate it should be wrapped as a magicgui to autogenerate
-# a widget.
-def threshold_autogenerate_widget(
-    img: "napari.types.ImageData",
-    threshold: "float",
-) -> "napari.types.LabelsData":
-    return img_as_float(img) > threshold
-
-
-# the magic_factory decorator lets us customize aspects of our widget
-# we specify a widget type for the threshold parameter
-# and use auto_call=True so the function is called whenever
-# the value of a parameter changes
-@magic_factory(
-    threshold={"widget_type": "FloatSlider", "max": 1}, auto_call=True
+pipe = pipeline(
+    task="depth-estimation", model="depth-anything/Depth-Anything-V2-Large-hf"
 )
-def threshold_magic_widget(
-    img_layer: "napari.layers.Image", threshold: "float"
+
+
+@magic_factory(call_button="Run")
+def vegetation(
+    input_data: "napari.types.ImageData",
 ) -> "napari.types.LabelsData":
-    return img_as_float(img_layer.data) > threshold
+    device = "cuda"
 
-
-# if we want even more control over our widget, we can use
-# magicgui `Container`
-class ImageThreshold(Container):
-    def __init__(self, viewer: "napari.viewer.Viewer"):
-        super().__init__()
-        self._viewer = viewer
-        # use create_widget to generate widgets from type annotations
-        self._image_layer_combo = create_widget(
-            label="Image", annotation="napari.layers.Image"
+    if input_data.ndim == 4:
+        output_data = np.zeros(
+            (input_data.shape[0], input_data.shape[1], input_data.shape[2]),
+            dtype="uint8",
         )
-        self._threshold_slider = create_widget(
-            label="Threshold", annotation=float, widget_type="FloatSlider"
+        INPUT = []
+        for i in range(len(input_data)):
+            rgb_data = input_data[i, :, :, :].compute()
+            image = Image.fromarray(rgb_data)
+            INPUT.append(image)
+    else:
+        output_data = np.zeros(
+            (1, input_data.shape[0], input_data.shape[1]), dtype="uint8"
         )
-        self._threshold_slider.min = 0
-        self._threshold_slider.max = 1
-        # use magicgui widgets directly
-        self._invert_checkbox = CheckBox(text="Keep pixels below threshold")
+        rgb_data = input_data
+        image = Image.fromarray(rgb_data)
+        INPUT = [image]
+    depth = pipe(INPUT)
+    n = len(depth)
 
-        # connect your own callbacks
-        self._threshold_slider.changed.connect(self._threshold_im)
-        self._invert_checkbox.changed.connect(self._threshold_im)
+    model, processor = ground_dino()
+    predictor, text_labels = sam2()
 
-        # append into/extend the container with your widgets
-        self.extend(
-            [
-                self._image_layer_combo,
-                self._threshold_slider,
-                self._invert_checkbox,
-            ]
+    for i in range(n):
+        depth_pred = depth[i]["depth"]
+        msks_depth = np.array(depth_pred)
+        msks_front = frontground_part(msks_depth)
+        msks_front = msks_front.astype(np.uint8) * 255
+
+        image = INPUT[i]
+        inputs = processor(
+            images=image, text=text_labels, return_tensors="pt"
+        ).to(device)
+        with torch.no_grad():
+            outputs = model(**inputs)
+
+        results = processor.post_process_grounded_object_detection(
+            outputs,
+            inputs.input_ids,
+            box_threshold=0.4,
+            text_threshold=0.3,
+            target_sizes=[image.size[::-1]],
         )
 
-    def _threshold_im(self):
-        image_layer = self._image_layer_combo.value
-        if image_layer is None:
-            return
-
-        image = img_as_float(image_layer.data)
-        name = image_layer.name + "_thresholded"
-        threshold = self._threshold_slider.value
-        if self._invert_checkbox.value:
-            thresholded = image < threshold
+        # Retrieve the first image result
+        result = results[0]
+        for box, score, labels in zip(
+            result["boxes"], result["scores"], result["labels"], strict=False
+        ):
+            box = [round(x, 2) for x in box.tolist()]
+            print(
+                f"Detected {labels} with confidence {round(score.item(), 3)} at location {box}"
+            )
+        if len(result["boxes"]) == 0:
+            masks = np.zeros(image.size[::-1], dtype="uint8")
         else:
-            thresholded = image > threshold
-        if name in self._viewer.layers:
-            self._viewer.layers[name].data = thresholded
+            with (
+                torch.inference_mode(),
+                torch.autocast("cuda", dtype=torch.bfloat16),
+            ):
+                predictor.set_image(image)
+                masks_sam, _, _ = predictor.predict(
+                    box=result["boxes"],
+                    point_labels=result["labels"],
+                    multimask_output=False,
+                )
+            if masks_sam.ndim == 4:
+                masks = np.sum(masks_sam, axis=0)
+                masks = masks[0, :, :]
+            else:
+                masks = masks_sam[0, :, :]
+
+        msks_veg = masks.astype(np.uint8) * 255
+
+        mask1 = msks_front.copy()  # Masque 1
+        mask2 = msks_veg.copy()  # Masque 2
+        mask2 = ndimage.binary_fill_holes(mask2)  # Fill holes
+        mask1 = (mask1 > 0).astype(np.uint8)  # Convertir en binaire
+        mask2 = (mask2 > 0).astype(np.uint8)  # Convertir en binaire
+        if len(np.unique(mask2)) == 2:
+            intersection = (
+                mask1 & mask2
+            )  # Intersection : les pixels qui sont 1 dans les deux masques
+            intersection = intersection > 0
         else:
-            self._viewer.add_labels(thresholded, name=name)
-
-
-class ExampleQWidget(QWidget):
-    # your QWidget.__init__ can optionally request the napari viewer instance
-    # use a type annotation of 'napari.viewer.Viewer' for any parameter
-    def __init__(self, viewer: "napari.viewer.Viewer"):
-        super().__init__()
-        self.viewer = viewer
-
-        btn = QPushButton("Click me!")
-        btn.clicked.connect(self._on_click)
-
-        self.setLayout(QHBoxLayout())
-        self.layout().addWidget(btn)
-
-    def _on_click(self):
-        print("napari has", len(self.viewer.layers), "layers")
+            intersection = mask1.copy()
+        intersection = (intersection * 255).astype(
+            np.uint8
+        )  # Si tu veux un masque avec des 0 et 255 (ex. pour OpenCV)
+        output_data[i, :, :] = intersection
+    return output_data
