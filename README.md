@@ -46,6 +46,8 @@ To install latest development version :
 
 This plugin is a tool to perform image inference. This plugin contained two steps of image processing. First, from RGB image, an depth map is estimated and then thresholded to detect foreground and background in image. Second, grounding dino model detect foliage in foreground. The output is a binary mask where white colour are associated to foliage in foreground.
 
+The plugin is applicable to images of trellised plants; in this configuration, it has been applied to images of pome fruit trees (apple) and climbing plants (grapevine).
+
 ## Contact
 
 Imhorphen team, bioimaging research group
