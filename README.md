@@ -48,6 +48,8 @@ This plugin is a tool to perform image inference. This plugin contained two step
 
 The plugin is applicable to images of trellised plants; in this configuration, it has been applied to images of pome fruit trees (apple) and climbing plants (grapevine).
 
+![sample_example](https://github.com/user-attachments/assets/4d48f719-8a9c-41d0-b8cb-e8b008d28a8a)
+
 ## Contact
 
 Imhorphen team, bioimaging research group
