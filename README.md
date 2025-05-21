@@ -46,7 +46,7 @@ To install latest development version :
 
 This plugin is a tool to perform image inference. This plugin contained two steps of image processing. First, from RGB image, a depth map is estimated and then thresholded based on the estimated depth histogram modes to detect foreground and background regions in image. Second, a Grounding DINO model detects foliage in the foreground. The output is a binary mask where white colour are associated to foliage in the foreground.
 
-The plugin is applicable to images of trellised plants; in this configuration, it has been applied to images of pome fruit trees (apple), stone fruit trees (abricot) and climbing plants (grapevine).
+The plugin is applicable to images of trellised plants; in this configuration, it has been applied to images of pome fruit trees (apple), stone fruit trees (apricot) and climbing plants (grapevine).
 
 ![sample_example](https://github.com/user-attachments/assets/ae845e01-9f48-4bcf-98ad-bf5f6e037f01)
 
