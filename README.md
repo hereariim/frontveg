@@ -13,7 +13,7 @@ A plugin for foreground vegetation segmentation, tailored for trellised vegetati
 
 ----------------------------------
 
-The method was developped by Herearii Metuarea, PHENET PhD at LARIS (French laboratory located in Angers, France) and Abdoul-Djalil Hamza Ousseini, AgroEcoPhen Engineer at IRHS (French Institute located in INRAe Angers, France) in Imhorphen team (bioimaging research group lead) under the supervision of Eric Duchêne (Research Engineer), Morgane Roth (Research Engineer) and David Rousseau (Full professor). This plugin was written by Herearii Metuarea and was designed in the context of the european project PHENET.
+The method was developped by Herearii Metuarea, PHENET PhD at LARIS (French laboratory located in Angers, France) and Abdoul-Djalil Ousseini Hamza, AgroEcoPhen Engineer at IRHS (French Institute located in INRAe Angers, France) in Imhorphen team (bioimaging research group lead) under the supervision of Eric Duchêne (Research Engineer), Morgane Roth (Research Engineer) and David Rousseau (Full professor). This plugin was written by Herearii Metuarea and was designed in the context of the european project PHENET.
 
 ![Data Warehouse](https://github.com/user-attachments/assets/4a110408-5854-4e8c-b655-4cb588434b79)
 
@@ -44,7 +44,7 @@ To install latest development version :
 
 ## Description
 
-This plugin is a tool to perform image inference. This plugin contained two steps of image processing. First, from RGB image, an depth map is estimated and then thresholded to detect foreground and background in image. Second, grounding dino model detect foliage in foreground. The output is a binary mask where white colour are associated to foliage in foreground.
+This plugin is a tool to perform image inference. This plugin contained two steps of image processing. First, from RGB image, a depth map is estimated and then thresholded based on the estimated depth histogram modes to detect foreground and background regions in image. Second, a Grounding DINO model detects foliage in the foreground. The output is a binary mask where white colour are associated to foliage in the foreground.
 
 The plugin is applicable to images of trellised plants; in this configuration, it has been applied to images of pome fruit trees (apple), stone fruit trees (abricot) and climbing plants (grapevine).
 
