@@ -1,7 +1,7 @@
 import os
 from collections import Counter
 
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 import numpy as np
 from scipy.signal import find_peaks
 from tqdm import tqdm
@@ -73,22 +73,22 @@ def minimum_betw_max(dico_, visua=False):
     x_min = x_min_range[min_index]
     y_min = y_min_range[min_index]
 
-    if visua:
-        # Tracé
-        plt.scatter(x, y, color="blue")
-        plt.plot(x_fit, y_fit, color="red", label="Polynomial regression")
-        plt.scatter(
-            x_fit[top_two_peaks],
-            y_fit[top_two_peaks],
-            color="green",
-            label="Local maximum",
-        )
-        plt.scatter(x_min, y_min, color="orange", s=100, label="Local minimum")
-        plt.legend()
-        plt.xlabel("Depth pixel")
-        plt.ylabel("Count")
-        # plt.title('Approximation et détection des points maximum')
-        plt.show()
+    # if visua:
+    #     # Tracé
+    #     plt.scatter(x, y, color="blue")
+    #     plt.plot(x_fit, y_fit, color="red", label="Polynomial regression")
+    #     plt.scatter(
+    #         x_fit[top_two_peaks],
+    #         y_fit[top_two_peaks],
+    #         color="green",
+    #         label="Local maximum",
+    #     )
+    #     plt.scatter(x_min, y_min, color="orange", s=100, label="Local minimum")
+    #     plt.legend()
+    #     plt.xlabel("Depth pixel")
+    #     plt.ylabel("Count")
+    #     # plt.title('Approximation et détection des points maximum')
+    #     plt.show()
     return x_min, y_min
 
 
