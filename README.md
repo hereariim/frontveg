@@ -13,7 +13,7 @@ A plugin for foreground vegetation segmentation, tailored for trellised vegetati
 
 ----------------------------------
 
-The method was developped by Herearii Metuarea, PHENET PhD at LARIS (French laboratory located in Angers, France) and Abdoul-Djalil Ousseini Hamza, AgroEcoPhen Engineer at IRHS (French Institute located in INRAe Angers, France) in Imhorphen team (bioimaging research group lead) under the supervision of Eric Duchêne (Research Engineer), Morgane Roth (Research Engineer) and David Rousseau (Full professor). This plugin was written by Herearii Metuarea and was designed in the context of the european project PHENET.
+The method was developped by Herearii Metuarea, PHENET PhD at LARIS (French laboratory located in Angers, France) and Abdoul Djalil Ousseini Hamza, AgroEcoPhen Engineer at IRHS (French Institute located in INRAe Angers, France) in Imhorphen team (bioimaging research group lead) under the supervision of Eric Duchêne (Research Engineer), Morgane Roth (Research Engineer) and David Rousseau (Full professor). This plugin was written by Herearii Metuarea and was designed in the context of the european project PHENET.
 
 ![Data Warehouse](https://github.com/user-attachments/assets/4a110408-5854-4e8c-b655-4cb588434b79)
 
@@ -57,7 +57,7 @@ Imhorphen team, bioimaging research group
 42 rue George Morel, Angers, France
 
 - Pr David Rousseau, david.rousseau@univ-angers.fr
-- Abdoul-djalil ousseini-hamza, abdoul-djalil.ousseini-hamza@inrae.fr
+- Abdoul Djalil Ousseini Hamza, abdoul-djalil.ousseini-hamza@inrae.fr
 - Herearii Metuarea, herearii.metuarea@univ-angers.fr
 
 ## Contributing
