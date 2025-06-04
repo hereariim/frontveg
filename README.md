@@ -36,11 +36,17 @@ You can install `frontveg` via [pip]:
 
     pip install frontveg
 
-
-
 To install latest development version :
 
     pip install git+https://github.com/hereariim/frontveg.git
+
+GPU is mandatory for time processing and models running (especially Grounding-DINO). Please visit the official PyTorch website to get the appropriate installation command:
+👉 https://pytorch.org/get-started/locally
+
+**Exemple : GPU (CUDA 12.1)**
+
+    pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
+
 
 ## Description
 
